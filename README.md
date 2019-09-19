@@ -3,4 +3,4 @@ Encrypted Chat App
 Cryston
 Ross
 J-J
-Alex
+Alec* not Alex
