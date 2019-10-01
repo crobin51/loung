@@ -2,5 +2,5 @@ Encrypted Chat App
 
 Cryston
 Ross
-J-J
+Jeremy-James Mercer
 Alec* not Alex
