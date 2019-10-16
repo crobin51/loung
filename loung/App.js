@@ -25,11 +25,13 @@ const styles = StyleSheet.create({
 import Main from './components/Main';
 import Chat from './components/Chat';
 // Import React Navigation
-import { createStackNavigator } from 'react-navigation'
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 // Create the navigator
-const navigator = createStackNavigator({
-  Main: { screen: Main },
-  Chat: { screen: Chat },
+const RootStack = createStackNavigator({
+  Main,
+  Chat,
 });
+const navigator = createAppContainer(RootStack);
 // Export it as the root component
-export default navigator
+export default navigator;
