@@ -5,7 +5,7 @@ class Fire {
     this.init();
     this.observeAuth();
   }
-
+//Initialize firebase credentials 
   init = () => {
       if (!firebase.apps.length){
           firebase.initializeApp({
@@ -23,6 +23,7 @@ class Fire {
 
   observeAuth = () => firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
+//check state of Autherized user
   onAuthStateChanged = user => {
     if (!user) {
       try {
@@ -32,7 +33,7 @@ class Fire {
       }
     }
   };
-
+//gets the user id of the current user
   get uid() {
     return (firebase.auth().currentUser || {}).uid;
   }
@@ -40,7 +41,7 @@ class Fire {
   get ref() {
     return firebase.database().ref('messages');
   }
-
+//returns a snapshot of the message that was just sent
   parse = snapshot => {
     const { timestamp: numberStamp, text, user } = snapshot.val();
     const { key: _id } = snapshot;
@@ -59,7 +60,7 @@ class Fire {
       .limitToLast(20)
       .on('child_added', snapshot => callback(this.parse(snapshot)));
   }
-
+//returns the timestamp
   get timestamp() {
     return firebase.database.ServerValue.TIMESTAMP;
   }
