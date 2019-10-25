@@ -1,41 +1,3 @@
-/*
-import React, { Component } from 'react';
-import { 
-    Stylesheet,
-    TextInput, // 1. <- Add this
-    View,
-} from 'react-native';
-
-class Main extends React.Component {
-    state = { name: ''} // 2. <- Add the componenet state
-
-    render() {
-        return (
-            <View>
-                <TextInput
-                    style={styles.nameInput}
-                    placeHolder="John Cena"
-                    value={this.state.name}
-                />
-            </View>
-        );
-    }
-}
-
-const offset = 24;
-const styles = Stylesheet.create({
-    nameInput: { // 3. <= Adda style for the input
-        height: offset * 2,
-        margin: offset,
-        paddingHoizontal: offset,
-        borderColor: '#111111',
-        borderWidth: 1,
-    },
-});
-
-export default Main;
-*/
-
 import React from 'react';
 import {
   StyleSheet,
@@ -54,8 +16,10 @@ class Main extends React.Component {
     name: '',
   };
 
+  //navigate to the chat
   onPress = () => this.props.navigation.navigate('Chat', { name: this.state.name });
 
+  //update name
   onChangeText = name => this.setState({ name });
 
   render() {
