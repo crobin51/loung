@@ -1,19 +1,18 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Import the screens
+import Main from './components/Main';
+import Chat from './components/Chat';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
+// Import React Navigation
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+// Create the navigator, allows navigation between the different components Main and Chat 
+const RootStack = createStackNavigator({
+  Main,
+  Chat,
 });
+//This had to be added because it the most current version of bundling the app function 
+const navigator = createAppContainer(RootStack);
+
+// Export it as the root component
+export default navigator;
