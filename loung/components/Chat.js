@@ -10,6 +10,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer'; //^0.4.1
 
 //this function ignores the "set a timer warning" on the bottom of the app. 
 //Currently there is no solutions, only work arounds as of October 25th, 2019
+//https://stackoverflow.com/questions/44603362/setting-a-timer-for-a-long-period-of-time-i-e-multiple-minutes
 YellowBox.ignoreWarnings(['Setting a timer']); 
 const _console = _.clone(console);
 console.warn = message => {
@@ -22,6 +23,7 @@ console.warn = message => {
 class Chat extends React.Component {
 
   //this function provides the navigation options for the chat component 
+  //this eventually will need to be changed to the name of the person we are chatting with
   //(currently as of October 25th, 2019 there is no real options)
   static navigationOptions = ({ navigation }) => ({ 
     title: navigation.getParam('name')
@@ -38,7 +40,8 @@ class Chat extends React.Component {
     };
   }
 
-  //renders the giftedchat component with the message, sending button and which user sent the message  
+  //renders the giftedchat component with the message, sending button and which user sent the message
+  //keyboard spaces solves the text input/keyboard issue we've been having. Must be in a view and have a flex set to 1  
   render() {
     return (
       <View style={{flex: 1}}>
@@ -46,6 +49,7 @@ class Chat extends React.Component {
         messages={this.state.messages}
         onSend={Fire.shared.send}
         user={this.user}
+        placeholder="type away..."
         />
         <KeyboardSpacer />
       </View>

@@ -1,15 +1,17 @@
-import React from 'react';
+import React from 'react'; //16.8.3
+
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
 
 class Main extends React.Component {
+  //this is the title
   static navigationOptions = {
-    title: 'Chatter',
+    title: 'loung',
   };
 
   state = {
@@ -19,7 +21,7 @@ class Main extends React.Component {
   //navigate to the chat
   onPress = () => this.props.navigation.navigate('Chat', { name: this.state.name });
 
-  //update name
+  //update username
   onChangeText = name => this.setState({ name });
 
   render() {
@@ -28,7 +30,6 @@ class Main extends React.Component {
         <Text style={styles.title}>Enter your name:</Text>
         <TextInput
           style={styles.nameInput}
-          placeHolder="John Cena"
           onChangeText={this.onChangeText}
           value={this.state.name}
         />
@@ -40,6 +41,8 @@ class Main extends React.Component {
   }
 }
 
+
+//implement dark theme in the future
 const offset = 24;
 const styles = StyleSheet.create({
   title: {

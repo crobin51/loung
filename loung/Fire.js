@@ -1,10 +1,12 @@
 import firebase from 'firebase'; // 4.8.1
 
+//establishes the fire class and user authentication with the database
 class Fire {
   constructor() {
     this.init();
     this.observeAuth();
   }
+
 //Initialize firebase credentials 
   init = () => {
       if (!firebase.apps.length){
@@ -21,6 +23,7 @@ class Fire {
       }
   }
 
+//makes sure that the authentication status to change
   observeAuth = () => firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
 //check state of Autherized user
@@ -37,7 +40,7 @@ class Fire {
   get uid() {
     return (firebase.auth().currentUser || {}).uid;
   }
-
+//grabs the previous messages from the database
   get ref() {
     return firebase.database().ref('messages');
   }
@@ -55,9 +58,10 @@ class Fire {
     return message;
   };
 
+  //limits loading the past 20 messages from database
   on = callback => {
     this.ref
-      .limitToLast(20)
+      // .limitToLast(20) //commented out for now but will want to limit # of messages later on 
       .on('child_added', snapshot => callback(this.parse(snapshot)));
   }
 //returns the timestamp
@@ -73,7 +77,6 @@ class Fire {
         user,
         timestamp: this.timestamp,
       };
-      //firebase.database.ref('messages').push(message);
       this.append(message);
     }
   };
