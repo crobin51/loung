@@ -2,8 +2,10 @@
 import React from 'react'; //16.8.3
 import { GiftedChat } from 'react-native-gifted-chat'; // ^0.11.0
 import _ from 'lodash'; //^4.17.15
-import { YellowBox } from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
+import { YellowBox, View } from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
 import Fire from '../Fire'; //^7.2.1
+import KeyboardSpacer from 'react-native-keyboard-spacer'; //^0.4.1
+//KeyboardSpacer allows the text input field to remain on top of the keyboard
 
 
 //this function ignores the "set a timer warning" on the bottom of the app. 
@@ -39,11 +41,14 @@ class Chat extends React.Component {
   //renders the giftedchat component with the message, sending button and which user sent the message  
   render() {
     return (
-      <GiftedChat
+      <View style={{flex: 1}}>
+        <GiftedChat
         messages={this.state.messages}
         onSend={Fire.shared.send}
         user={this.user}
-      />
+        />
+        <KeyboardSpacer />
+      </View>
     );
   }
 
