@@ -1,6 +1,6 @@
 Encrypted Chat App
 
-Cryston
-Ross
-Jeremy-James Mercer
-Alec* not Alex
+Cryston,
+Ross,
+Jeremy-James Mercer, and
+Alec
