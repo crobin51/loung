@@ -10,16 +10,16 @@ class Fire {
 //Initialize firebase credentials 
   init = () => {
       if (!firebase.apps.length){
-          firebase.initializeApp({
-            apiKey: "AIzaSyDoc2ey7slNy3kcDI9NvYVha5wxlCzYFro",
-            authDomain: "alec-chatapptest.firebaseapp.com",
-            databaseURL: "https://alec-chatapptest.firebaseio.com",
-            projectId: "alec-chatapptest",
-            storageBucket: "alec-chatapptest.appspot.com",
-            messagingSenderId: "235628079787",
-            appId: "1:235628079787:web:d2c159e7558b78b9ae65ee",
-            measurementId: "G-DEXZ7K1GWL"
-          });
+         firebase.initializeApp({
+      apiKey: "AIzaSyDJe_qpQ80vn_Z3drb33xIQxGzg6O-2Eys",
+    authDomain: "loung-47595.firebaseapp.com",
+    databaseURL: "https://loung-47595.firebaseio.com",
+    projectId: "loung-47595",
+    storageBucket: "loung-47595.appspot.com",
+    messagingSenderId: "1096233419277",
+              appId: "1:1096233419277:web:d4fd5d404d1533b3f18b44",
+    measurementId: "G-VGC428F8P8"
+    });
       }
   }
 

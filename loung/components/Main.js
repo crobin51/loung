@@ -9,6 +9,8 @@ import {
 } from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
 
 class Main extends React.Component {
+    
+    
   //this is the title
   static navigationOptions = {
     title: 'loung',
@@ -19,7 +21,7 @@ class Main extends React.Component {
   };
 
   //navigate to the chat
-  onPress = () => this.props.navigation.navigate('Chat', { name: this.state.name });
+  onPress = () => this.props.navigation.navigate('GroupChat', { name: this.state.name });
 
   //update username
   onChangeText = name => this.setState({ name });
