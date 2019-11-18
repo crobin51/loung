@@ -11,34 +11,42 @@ class GroupChat extends React.Component{
     constructor(props) {
     super(props);
 
-    console.log(this.props)
+   
 }
     state = {
+    name: this.props.navigation.state.params.name,
     chats: [],
+    groupName: "",
     renderState: 0,
+    groupCode: ""
   };
 
     static navigationOptions = ({ navigation }) => ({ 
     title: navigation.getParam('name')
   });
-    
+
+onChangeGroupName = groupName => this.setState({ groupName });
+
+onChangeGroupCode = groupCode => this.setState({groupCode});
+
 newChat=()=> this.setState({renderState: 1});
 
 joinExisting=()=> this.setState({renderState: 2});
 
-createNewChatroom(nav, group){
+createNewChatroom= () => {
      var result           = '';
    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
    var charactersLength = characters.length;
    for ( var i = 0; i < 5; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
-      
-    nav.navigate('Chat', { name: name, groupName: group, code: result});
+      //console.log(this.props);
+    this.props.navigation.navigate('Chat', { name: this.state.name , groupName: this.state.groupName, code: result, flag: 1});
 }
 
-findExistingChatroom(){
-    
+findExistingChatroom = () => {
+  
+     this.props.navigation.navigate('Chat', { name: this.state.name ,code: this.state.groupCode, flag: 0});
 }
 
 render() {
@@ -62,11 +70,11 @@ render() {
          <Text style={styles.title}>Please Enter Chatroom Name:</Text>
         <TextInput
           style={styles.nameInput}
-          onChangeText={this.onChangeText}
+          onChangeText={this.onChangeGroupName}
           value={this.state.groupName}
         />
         
-         <TouchableOpacity onPress={this.createNewChatroom(this.props.navigation, groupName)}>
+    <TouchableOpacity onPress={this.createNewChatroom}>
           <Text style={styles.buttonText}>Create</Text>
         </TouchableOpacity>
     
@@ -83,7 +91,7 @@ render() {
             <Text style={styles.title}>Enter Group Code:</Text>
         <TextInput
           style={styles.nameInput}
-          onChangeText={this.onChangeText}
+          onChangeText={this.onChangeGroupCode}
           value={this.state.groupCode}
         />
         <TouchableOpacity onPress={this.findExistingChatroom}>

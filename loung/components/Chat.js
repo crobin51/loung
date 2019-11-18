@@ -26,11 +26,12 @@ class Chat extends React.Component {
   //this eventually will need to be changed to the name of the person we are chatting with
   //(currently as of October 25th, 2019 there is no real options)
   static navigationOptions = ({ navigation }) => ({ 
-    title: navigation.getParam('name')
+    title: navigation.getParam('groupName')
   });
 
   state = { //holds the messages in the chat state
-    messages: [],
+      messages: [],
+      flag: this.props.navigation.state.params.flag,
   };
 
   get user() { //retrieves the user information and _id from the database
@@ -39,7 +40,16 @@ class Chat extends React.Component {
       _id: Fire.shared.uid,
     };
   }
+ 
 
+ onSend = (messages=[]) => {
+     Fire.shared.send(messages, this.props.navigation.state.params.code);
+     
+     this.setState(previousState => ({              
+           messages: GiftedChat.append(previousState.messages, messages),
+      }));
+     
+ }
   //renders the giftedchat component with the message, sending button and which user sent the message
   //keyboard spaces solves the text input/keyboard issue we've been having. Must be in a view and have a flex set to 1  
   render() {
@@ -47,7 +57,7 @@ class Chat extends React.Component {
       <View style={{flex: 1}}>
         <GiftedChat
         messages={this.state.messages}
-        onSend={Fire.shared.send}
+        onSend={(messages) => this.onSend(messages)}
         user={this.user}
         placeholder="type away..."
         />
@@ -58,11 +68,30 @@ class Chat extends React.Component {
 
   //makes sure that Firebase loads the previous messages on chat component rendering
   componentDidMount() { 
-    Fire.shared.on(message =>
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, message),
+               
+      if(this.state.flag === 1){
+           Fire.shared.appendGroup(this.props.navigation.state.params.code, this.props.navigation.state.params.groupName);
+          
+          this.setState({flag: 0});
+          
+      }
+    
+      if(Fire.shared.doesExist(this.props.navigation.state.params.code.trim())){
+          Fire.shared.on(this.props.navigation.state.params.code.trim(), message =>                            
+            this.setState(previousState => ({              
+           messages: GiftedChat.append(previousState.messages, message),
       }))
-    );
+    )
+          
+          ;
+     
+      }else{
+           console.log("nonono");
+          
+      }
+        
+             
+ 
   }
 
   //when the chat app is turned off, the firebase connection will be shut off 
