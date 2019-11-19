@@ -35,18 +35,32 @@ joinExisting=()=> this.setState({renderState: 2});
 
 createNewChatroom= () => {
      var result           = '';
-   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
    var charactersLength = characters.length;
    for ( var i = 0; i < 5; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
       //console.log(this.props);
-    this.props.navigation.navigate('Chat', { name: this.state.name , groupName: this.state.groupName, code: result, flag: 1});
+    if(this.state.groupName ===""){
+        alert("Group Name cannot be empty, please enter a valid name.");
+   
+    }else{
+        this.props.navigation.navigate('Chat', { name: this.state.name , groupName: this.state.groupName, code: result, flag: 1}); 
+    }
+    
+   
 }
 
 findExistingChatroom = () => {
-  
-     this.props.navigation.navigate('Chat', { name: this.state.name ,code: this.state.groupCode, flag: 0});
+    if(this.state.groupCode === "" ){
+        alert("Group Code cannot be empty, please enter a valid code");
+    }else if(this.state.groupCode.length < 5 || this.state.groupCode.length > 5){
+             alert("Invalid Group Code Length. Please enter your 5 characther code!");
+             }
+    else{
+        this.props.navigation.navigate('Chat', { name: this.state.name ,code: this.state.groupCodetoUpperCase(), flag: 0});
+    }
+     
 }
 
 render() {
@@ -55,11 +69,11 @@ render() {
         <View>
            
            <TouchableOpacity onPress={this.joinExisting}>
-          <Text style={styles.buttonText}>Join Existing Room</Text>
+          <Text style={styles.mainButtons}>Join Existing Room</Text>
         </TouchableOpacity>
         
         <TouchableOpacity onPress={this.newChat}>
-          <Text style={styles.buttonText}>Create New Chatroom</Text>
+          <Text style={styles.mainButtons}>Create New Chatroom</Text>
         </TouchableOpacity>
            </View>
         
@@ -129,6 +143,11 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     fontSize: offset,
   },
+  mainButtons: {
+      marginLeft: offset,
+    fontSize: offset,
+      marginTop: offset,
+  }
 });
 
 export default GroupChat;
