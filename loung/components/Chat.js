@@ -2,7 +2,8 @@
 import React from 'react'; //16.8.3
 import { GiftedChat } from 'react-native-gifted-chat'; // ^0.11.0
 import _ from 'lodash'; //^4.17.15
-import { YellowBox, View } from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
+import { YellowBox, View, Button } from 'react-native'; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
+import { Icon } from 'react-native-elements'
 import Fire from '../Fire'; //^7.2.1
 import KeyboardSpacer from 'react-native-keyboard-spacer'; //^0.4.1
 //KeyboardSpacer allows the text input field to remain on top of the keyboard
@@ -26,12 +27,20 @@ class Chat extends React.Component {
   //this eventually will need to be changed to the name of the person we are chatting with
   //(currently as of October 25th, 2019 there is no real options)
   static navigationOptions = ({ navigation }) => ({ 
-    title: navigation.getParam('groupName')
+    title: navigation.getParam('groupName'),
+       headerRight: () => (
+      <Icon
+        onPress={() => alert("Group Code: " + navigation.getParam("code"))}
+        name="info-circle"
+        type="font-awesome"
+   
+      />
+                                                  ),
   });
 
   state = { //holds the messages in the chat state
       messages: [],
-      flag: this.props.navigation.state.params.flag,
+      flag: this.props.navigation.state.params.flag
   };
 
   get user() { //retrieves the user information and _id from the database
@@ -43,7 +52,7 @@ class Chat extends React.Component {
  
 
  onSend = (messages=[]) => {
-     Fire.shared.send(messages, this.props.navigation.state.params.code);
+     Fire.shared.send(messages, this.props.navigation.state.params.code, this.props.navigation.state.params.groupName);
      
      this.setState(previousState => ({              
            messages: GiftedChat.append(previousState.messages, messages),
@@ -67,30 +76,38 @@ class Chat extends React.Component {
   }
 
   //makes sure that Firebase loads the previous messages on chat component rendering
-  componentDidMount() { 
-               
+  componentDidMount() {
+      
+
+      //check if a new room is being created. If so make a new group in the db. 
       if(this.state.flag === 1){
            Fire.shared.appendGroup(this.props.navigation.state.params.code, this.props.navigation.state.params.groupName);
           
           this.setState({flag: 0});
-          
+         
       }
+      
+      //checks if the group exists, if so load its group info else return back to the group chat screen with error
+      Fire.shared.doesExist(this.props.navigation.state.params.code, check => {
+          if(!check){
+              this.props.navigation.navigate('GroupChat', { name: this.props.navigation.state.params.name });
+          }else{
+             Fire.shared.groupInfo(this.props.navigation.state.params.code, gInfo => {
+         console.log(gInfo);
+                 this.props.navigation.setParams({groupName: gInfo});
+      }); 
+          }
+  
+      });
     
-      if(Fire.shared.doesExist(this.props.navigation.state.params.code.trim())){
+     
           Fire.shared.on(this.props.navigation.state.params.code.trim(), message =>                            
             this.setState(previousState => ({              
            messages: GiftedChat.append(previousState.messages, message),
       }))
-    )
-          
-          ;
+    );
      
-      }else{
-           console.log("nonono");
-          
-      }
         
-             
  
   }
 

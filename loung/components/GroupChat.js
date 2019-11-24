@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 
+
 class GroupChat extends React.Component{
     constructor(props) {
     super(props);
@@ -29,9 +30,12 @@ onChangeGroupName = groupName => this.setState({ groupName });
 
 onChangeGroupCode = groupCode => this.setState({groupCode});
 
+//changes the render to the newChat render
 newChat=()=> this.setState({renderState: 1});
 
+//changes the render to the joinExisting render
 joinExisting=()=> this.setState({renderState: 2});
+
 
 createNewChatroom= () => {
      var result           = '';
@@ -40,12 +44,14 @@ createNewChatroom= () => {
    for ( var i = 0; i < 5; i++ ) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
-      //console.log(this.props);
+
     if(this.state.groupName ===""){
         alert("Group Name cannot be empty, please enter a valid name.");
    
     }else{
+       
         this.props.navigation.navigate('Chat', { name: this.state.name , groupName: this.state.groupName, code: result, flag: 1}); 
+         this.setState({renderState: 0});
     }
     
    
@@ -58,7 +64,8 @@ findExistingChatroom = () => {
              alert("Invalid Group Code Length. Please enter your 5 characther code!");
              }
     else{
-        this.props.navigation.navigate('Chat', { name: this.state.name ,code: this.state.groupCodetoUpperCase(), flag: 0});
+        
+        this.props.navigation.navigate('Chat', { groupName: "", name: this.state.name ,code: this.state.groupCode.toUpperCase(), flag: 0});
     }
      
 }
@@ -123,7 +130,7 @@ render() {
 
 }
 
-//implement dark theme in the future
+
 const offset = 24;
 const styles = StyleSheet.create({
   title: {

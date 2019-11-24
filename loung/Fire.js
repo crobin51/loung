@@ -38,27 +38,34 @@ class Fire {
             }
         }
     };
+
+ 
+    //checks that a group exists and returns the true/false value
+    doesExist = (gid, callback) =>{
     
-    doesExist= (gid) =>{
-     
-        let check = this.ref.child("/" + gid).once("value", data => {
-          
-            if(data.exists()){
-                  //console.log(data);
-                return true;
-                
-            }else{
-                
-               return false;
-            }
-            //console.log(check);
-         
-            
+        this.ref.child("/" + gid).once("value", data => {
+    let exists =(data.val() !== null);
+             if(!exists){
+            alert("The code " + gid+ " does not exist. Please Enter a Valid Code" );
+           
+        }
+            callback(exists);
         });
-          console.log(check);
-            return check;
+     
          
+    };
+
+    //returns info about the group. For now returns the name, in future list of users as well.
+    groupInfo = (gid, callback) => {
+         this.ref.child("/" + gid).once("value", data => {
+             
+             
+            callback(data.val().groupName);
+       
+    })
     }
+  
+    
     //gets the user id of the current user
     get uid() {
         return (firebase.auth().currentUser || {}).uid;
@@ -87,7 +94,6 @@ class Fire {
             user,
         };
         
-       // console.log(message);
         return message;
     };
 
@@ -109,8 +115,9 @@ class Fire {
     get timestamp() {
         return firebase.database.ServerValue.TIMESTAMP;
     }
+
     // send the message to the Backend
-    send = (messages, gid) => {
+    send = (messages, gid, gName) => {
 
         for (let i = 0; i < messages.length; i++) {
             const {
@@ -123,18 +130,17 @@ class Fire {
                 user,
                 timestamp: this.timestamp,
             };
-            this.append(message, gid);
+            this.append(message, gid, gName);
         }
     };
 
 
+//sets the message states for each group in the db
 
+    append = (message, gid, gName) => {
 
-    append = (message, gid) => {
-
-        //console.log(gid);
         this.ref.child("/" + gid).once("value", data => {
-            // console.log(data.val().messages[0].text);
+           
             let temp = [];
 
             if (data.val().messages[0].user._id === 0) {
@@ -155,25 +161,27 @@ class Fire {
                 temp.push(message);
             }
 
-
             this.ref.child("/" + gid).set({
+                groupName: gName,
                 messages: temp
             });
 
         })
 
     }
-
+    
+    
+    //sets a group initially in the db
     appendGroup = (code, name) => {
 
         const group = {
             groupName: name,
             messages: [{
-                _id: Date.now(),
+                _id: "onGawd",
                 text: "Welcome",
                 timestamp: Date.now(),
                 user: {
-                    _id: "0FBLkaGJVoQCzOtWz9tMVUeuA2P2",
+                    _id: this.uid,
                     name: "placeholder"
                 }
             }],
