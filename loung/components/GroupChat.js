@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
+import Fire from '../Fire'; //^7.2.1
+import { List, ListItem } from 'react-native-elements';
 
 class GroupChat extends React.Component{
     constructor(props) {
@@ -15,7 +16,7 @@ class GroupChat extends React.Component{
    
 }
     state = {
-    name: this.props.navigation.state.params.name,
+    name: null,
     chats: [],
     groupName: "",
     renderState: 0,
@@ -69,6 +70,18 @@ findExistingChatroom = () => {
     }
      
 }
+
+componentDidMount(){
+    Fire.shared.userInfo(info => {
+      this.setState({
+          name: info.user,
+          chats: info.groups,
+      })
+        
+    });
+}
+
+
 
 render() {
     if(this.state.renderState===0){

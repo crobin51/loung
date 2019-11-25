@@ -22,7 +22,42 @@ class Fire {
             });
         }
     }
+    
+    //get User Info/Groups they belong to
+    userInfo = (callback) =>{
+        let user=firebase.auth().currentUser;
+        //console.log(user);
+                    let groups = [];
+        this.ref.once("value", snapshot => {
 
+                snapshot.forEach(child => {
+              
+               for(var i = 0; i< child.val().messages.length; i++){
+                if(child.val().messages[i].user._id === user.uid){
+                    const group= {
+                        code: child.key,
+                        name: child.val().groupName,
+                    }
+                   groups.push(group);
+                      
+                    
+                    break;
+               }
+               }
+            
+           });
+           
+           const info = {
+               user: user.email,
+               groups: groups,
+           } 
+            
+               callback(info);
+        });
+        
+     
+    }
+    
     //makes sure that the authentication status to change
     observeAuth = () => firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
 
@@ -38,7 +73,30 @@ class Fire {
             }
         }
     };
-
+    
+    signUp = (email, password, confirm) => {
+        firebase.auth().createUserWithEmailAndPassword(email, password).then(()=>{
+            confirm(true);
+        }).catch(error=>{
+          
+           if(password.length < 6){
+                alert("Password length too short, try again");
+           }else{
+                alert("Invalid Signup, try again");
+           }
+           
+        })
+        
+    }
+    
+    login = (email, password, confirm) => {
+        firebase.auth().signInWithEmailAndPassword(email, password).then(()=>{
+            confirm(true);
+        }).catch(error=>{
+          alert("Invalid Login, try again");
+           
+        })
+    }
  
     //checks that a group exists and returns the true/false value
     doesExist = (gid, callback) =>{
