@@ -1,32 +1,40 @@
-import React from 'react'
-import { StyleSheet, Text, TextInput, View,  TouchableOpacity, Button } from 'react-native'
-import Fire from '../Fire'; //^7.2.1
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Button
+} from "react-native";
+import Fire from "../Fire"; //^7.2.1
 export default class SignUp extends React.Component {
-    
-    static navigationOptions = {
-    title: 'loung',
+  static navigationOptions = {
+    title: "loung"
   };
-    
-  state = { email: '', password: '', errorMessage: null }
-handleSignUp = () => {
-    Fire.shared.signUp(this.state.email.trim(), this.state.password.trim(), signedIn => {
-       if(signedIn){
-          this.props.navigation.navigate('GroupChat');  
-       }
-    }
-    )
-} 
-      
-      
 
-render() {
+  state = { email: "", password: "", errorMessage: null };
+
+//signs the user up with the database
+  handleSignUp = () => {
+    Fire.shared.signUp(
+      this.state.email.trim(),
+      this.state.password.trim(),
+      signedIn => {
+        if (signedIn) {
+          this.props.navigation.navigate("GroupChat");
+        }
+      }
+    );
+  };
+
+  render() {
     return (
       <View style={styles.container}>
         <Text>Sign Up</Text>
-        {this.state.errorMessage &&
-          <Text style={{ color: 'red' }}>
-            {this.state.errorMessage}
-          </Text>}
+        {this.state.errorMessage && (
+          <Text style={{ color: "red" }}>{this.state.errorMessage}</Text>
+        )}
         <TextInput
           placeholder="Email"
           autoCapitalize="none"
@@ -45,24 +53,24 @@ render() {
         <Button title="Sign Up" onPress={this.handleSignUp} />
         <Button
           title="Already have an account? Login"
-          onPress={() => this.props.navigation.navigate('Login')}
+          onPress={() => this.props.navigation.navigate("Login")}
         />
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   },
   textInput: {
     height: 40,
-    width: '90%',
-    borderColor: 'gray',
+    width: "90%",
+    borderColor: "gray",
     borderWidth: 1,
     marginTop: 8
   }
-})
+});
