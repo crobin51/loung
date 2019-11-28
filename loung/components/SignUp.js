@@ -1,13 +1,14 @@
 import React from "react";
 import {
-  StyleSheet,
   Text,
   TextInput,
   View,
+  KeyboardAvoidingView,
   TouchableOpacity,
-  Button
 } from "react-native";
 import Fire from "../Fire"; //^7.2.1
+import styles from './styles';
+
 export default class SignUp extends React.Component {
   static navigationOptions = {
     title: "loung"
@@ -30,47 +31,41 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Sign Up</Text>
-        {this.state.errorMessage && (
-          <Text style={{ color: "red" }}>{this.state.errorMessage}</Text>
-        )}
-        <TextInput
-          placeholder="Email"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={email => this.setState({ email })}
-          value={this.state.email}
-        />
-        <TextInput
-          secureTextEntry
-          placeholder="Password"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={password => this.setState({ password })}
-          value={this.state.password}
-        />
-        <Button title="Sign Up" onPress={this.handleSignUp} />
-        <Button
-          title="Already have an account? Login"
-          onPress={() => this.props.navigation.navigate("Login")}
-        />
-      </View>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.loginView}>
+          {this.state.errorMessage && (
+            <Text style={{ color: "red" }}>{this.state.errorMessage}</Text>
+          )}
+        </View>
+        <View style={styles.input}>
+          <TextInput
+            placeholder="email"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
+            autoCapitalize="none"
+            style={styles.textInput}
+            onChangeText={email => this.setState({ email })}
+            value={this.state.email}
+          />
+          <TextInput
+            secureTextEntry
+            placeholder="password"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
+            autoCapitalize="none"
+            style={styles.textInput}
+            onChangeText={password => this.setState({ password })}
+            value={this.state.password}
+          />
+        </View>
+        <View style={styles.buttons}>
+          <TouchableOpacity style={styles.physcialButton} onPress={this.handleSignUp}><Text style={styles.buttonText}>sign up</Text></TouchableOpacity>
+          <TouchableOpacity
+            style={styles.physcialButton}
+            onPress={() => this.props.navigation.navigate("Login")}
+          ><Text style={styles.buttonText}>already have an account? login</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  textInput: {
-    height: 40,
-    width: "90%",
-    borderColor: "gray",
-    borderWidth: 1,
-    marginTop: 8
-  }
-});

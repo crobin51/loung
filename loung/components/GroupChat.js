@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
   View
 } from "react-native";
 import Fire from "../Fire"; //^7.2.1
@@ -22,7 +23,7 @@ class GroupChat extends React.Component {
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("name")
+    title: 'loung'
   });
 
   onChangeGroupName = groupName => this.setState({ groupName });
@@ -88,7 +89,7 @@ class GroupChat extends React.Component {
   render() {
     if (this.state.renderState === 0) {
       return (
-        <View>
+        <View style={styles.container}>
           <TouchableOpacity onPress={this.joinExisting}>
             <Text style={styles.mainButtons}>Join Existing Room</Text>
           </TouchableOpacity>
@@ -100,71 +101,103 @@ class GroupChat extends React.Component {
       );
     } else if (this.state.renderState === 1) {
       return (
-        <View>
-          <Text style={styles.title}>Please Enter Chatroom Name:</Text>
+        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+          <Text style={styles.title}>please enter chatroom name:</Text>
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupName}
             value={this.state.groupName}
+            placeholder="be creative"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
           />
 
           <TouchableOpacity onPress={this.createNewChatroom}>
-            <Text style={styles.buttonText}>Create</Text>
+            <Text style={styles.buttons}>create</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.joinExisting}>
-            <Text style={styles.buttonText}>Join Existing Room</Text>
+            <Text style={styles.buttons}>join existing room</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
     //k
     else {
       return (
-        <View>
-          <Text style={styles.title}>Enter Group Code:</Text>
+        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+          <Text style={styles.title}>enter group code:</Text>
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupCode}
             value={this.state.groupCode}
+            placeholder="5 digits..."
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
           />
           <TouchableOpacity onPress={this.findExistingChatroom}>
-            <Text style={styles.buttonText}>Join</Text>
+            <Text style={styles.buttons}>join</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={this.newChat}>
-            <Text style={styles.buttonText}>Create New Chatroom</Text>
+            <Text style={styles.buttons}>create new chatroom</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
   }
 }
 
-const offset = 24;
-const styles = StyleSheet.create({
-  title: {
-    marginTop: offset,
-    marginLeft: offset,
-    fontSize: offset
-  },
-  nameInput: {
-    height: offset * 2,
 
-    margin: offset,
-    paddingHorizontal: offset,
-    borderColor: "#111111",
-    borderWidth: 1
-  },
-  buttonText: {
-    marginLeft: offset,
-    fontSize: offset
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: '#010A26',
   },
   mainButtons: {
-    marginLeft: offset,
-    fontSize: offset,
-    marginTop: offset
-  }
+    color: '#010A26',
+    backgroundColor: '#E83338',
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 3,
+    borderRadius: 10,
+    height: 50,
+    paddingTop: '1%',
+  },
+  title: {
+    color: '#E83338',
+    fontSize: 26,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 3,
+  },
+  nameInput: {
+    flex: 0.1,
+    margin: 5,
+    alignSelf: 'center',
+    width: '35%',
+    padding: 2,
+    borderColor: "white",
+    borderWidth: 1,
+    borderRadius: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#E83338',
+    fontWeight: 'bold',
+  },
+  buttons: {
+    color: '#010A26',
+    backgroundColor: '#E83338',
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 5,
+    borderRadius: 10,
+    height: 50,
+    paddingTop: '1%',
+  },
+  
 });
 
 export default GroupChat;

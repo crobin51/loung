@@ -15,9 +15,20 @@ const RootStack = createStackNavigator({
   GroupChat,
   SignUp,
   Login
-},{
-    initialRouteName: 'Login'
-  });
+},
+{
+  initialRouteName: 'Login',
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#E83338',
+    },
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 32,
+      color: '#010A26',
+    },
+  }
+});
 //This had to be added because it the most current version of bundling the app function 
 const navigator = createAppContainer(RootStack);
 
