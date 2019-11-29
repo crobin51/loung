@@ -8,8 +8,8 @@ import {
   View
 } from "react-native";
 import Fire from "../Fire"; //^7.2.1
-import { List, ListItem } from "react-native-elements";
-
+//import { List, ListItem } from "react-native-elements";
+import { Icon } from "react-native-elements";
 class GroupChat extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +23,12 @@ class GroupChat extends React.Component {
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'loung'
+    title: 'loung',
+    headerRight: () => (
+      <Icon
+        containerStyle={{ marginRight: 10 }}
+      />
+    ) 
   });
 
   onChangeGroupName = groupName => this.setState({ groupName });
@@ -106,6 +111,7 @@ class GroupChat extends React.Component {
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupName}
+            autoCapitalize="characters"
             value={this.state.groupName}
             placeholder="be creative"
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
@@ -129,6 +135,7 @@ class GroupChat extends React.Component {
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupCode}
+            autoCapitalize="characters"
             value={this.state.groupCode}
             placeholder="5 digits..."
             placeholderTextColor="rgba(255, 255, 255, 0.3)"

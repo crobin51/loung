@@ -26,6 +26,8 @@ const RootStack = createStackNavigator({
       fontWeight: 'bold',
       fontSize: 32,
       color: '#010A26',
+      marginLeft: 'auto',
+      marginRight: 'auto'
     },
   }
 });

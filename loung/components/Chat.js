@@ -1,8 +1,8 @@
 // @flow
 import React from "react"; //16.8.3
-import { GiftedChat } from "react-native-gifted-chat"; // ^0.11.0
+import { GiftedChat, InputToolbar, Composer } from "react-native-gifted-chat"; // ^0.11.0
 import _ from "lodash"; //^4.17.15
-import { YellowBox, View, Button } from "react-native"; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
+import { YellowBox, StyleSheet, View } from "react-native"; //https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz
 import { Icon } from "react-native-elements";
 import Fire from "../Fire"; //^7.2.1
 import KeyboardSpacer from "react-native-keyboard-spacer"; //^0.4.1
@@ -29,8 +29,10 @@ class Chat extends React.Component {
     headerRight: () => (
       <Icon
         onPress={() => alert("Group Code: " + navigation.getParam("code"))}
-        name="info-circle"
+        name="unlock"
         type="font-awesome"
+        containerStyle={{ marginRight: 15,}}
+        color='#010A26'
       />
     )
   });
@@ -60,22 +62,19 @@ class Chat extends React.Component {
   //keyboard spaces solves the text input/keyboard issue we've been having. Must be in a view and have a flex set to 1
   render() {
     return (
-      <View
-        style={{
-          flex: 1
-        }}
-      >
+      <View style={styles.container}>
         <GiftedChat
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={this.user}
           placeholder="type away..."
-        />
+          placeholderTextColor="rgba(255, 255, 255, 1.0)"
+          renderInputToolbar={props => ( <InputToolbar {...props} containerStyle={{ backgroundColor: '#010A26', }} renderComposer={props1 => ( <Composer {...props1} textInputStyle={{ color: "white"}} /> )} /> )}
+        /> 
         <KeyboardSpacer />
-      </View>
+      </View> 
     );
   }
-
 
   componentDidMount() {
     //check if a new room is being created. If so make a new group in the db.
@@ -124,3 +123,10 @@ class Chat extends React.Component {
 }
 
 export default Chat;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,  
+    backgroundColor: '#010A26',
+  },  
+})
