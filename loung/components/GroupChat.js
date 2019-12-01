@@ -15,7 +15,7 @@ class GroupChat extends React.Component {
     super(props);
   }
   state = {
-    name: null,
+    name: " ",
     chats: [],
     groupName: "",
     renderState: 0,
@@ -73,23 +73,36 @@ class GroupChat extends React.Component {
     ) {
       alert("Invalid Group Code Length. Please enter your 5 characther code!");
     } else {
-      this.props.navigation.navigate("Chat", {
+        Fire.shared.joinGroup(this.state.groupCode, confirm => {
+            if(confirm){
+               this.props.navigation.navigate("Chat", {
         groupName: "",
         name: this.state.name,
         code: this.state.groupCode.toUpperCase(),
         flag: 0
-      });
+      }); 
+            }
+            
+        })
+        
+      
     }
   };
 
   componentDidMount() {
     Fire.shared.userInfo(info => {
+        console.log(info);
+        
       this.setState({
         name: info.user,
         chats: info.groups
       });
     });
   }
+
+usersChats = () => {
+    alert(this.state.chats.toString());
+}
 
   render() {
     if (this.state.renderState === 0) {
@@ -102,6 +115,11 @@ class GroupChat extends React.Component {
           <TouchableOpacity onPress={this.newChat}>
             <Text style={styles.mainButtons}>Create New Chatroom</Text>
           </TouchableOpacity>
+          
+              <TouchableOpacity onPress={this.usersChats}>
+            <Text style={styles.mainButtons}>Your Group Codes</Text>
+          </TouchableOpacity>
+          
         </View>
       );
     } else if (this.state.renderState === 1) {

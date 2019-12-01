@@ -1,4 +1,5 @@
 import firebase from "firebase"; // 4.8.1
+import CryptoJS from "react-native-crypto-js";
 
 //establishes the fire class and user authentication with the database
 class Fire {
@@ -23,33 +24,46 @@ class Fire {
     }
   };
 
-  //get User Info/Groups they belong to
+joinGroup = (code, callback) => {
+      let user = firebase.auth().currentUser;
+      
+      firebase.database().ref("users/" + user.uid).once("value", snapshot => {
+          let previousGroups = [];
+          if(snapshot.val().groups != null){
+            for(var i = 0; i < snapshot.val().groups.length; i++){
+                previousGroups.push(snapshot.val().groups[i]);
+            }
+              console.log(previousGroups);
+          }
+           previousGroups.push(code);
+          
+            const temp = {
+            name: snapshot.val().name,
+            groups: previousGroups
+        }
+            //console.log(temp);
+        firebase.database().ref("users/"+user.uid).set(temp);
+          
+          callback(true);
+      })
+}
+
   userInfo = callback => {
     let user = firebase.auth().currentUser;
-
-    let groups = [];
-    this.ref.once("value", snapshot => {
-      snapshot.forEach(child => {
-        for (var i = 0; i < child.val().messages.length; i++) {
-          if (child.val().messages[i].user._id === user.uid) {
-            const group = {
-              code: child.key,
-              name: child.val().groupName
-            };
-            groups.push(group);
-
-            break;
-          }
-        }
-      });
-
-      const info = {
-        user: user.email,
-        groups: groups
+      
+      firebase.database().ref("users/" + user.uid).once("value", snapshot =>{
+        
+       
+             const info = {
+        user: snapshot.val().name,
+        groups:snapshot.val().groups
+                
       };
 
-      callback(info);
-    });
+      callback(info);  
+      })
+     
+
   };
 
   //makes sure that the authentication status to change
@@ -59,21 +73,25 @@ class Fire {
   //check state of Autherized user
   onAuthStateChanged = user => {
     if (!user) {
-      try {
-        firebase.auth().signInAnonymously();
-      } catch ({ message }) {
-        alert(message);
-      }
+      
     }
   };
 
-  signUp = (email, password, confirm) => {
+  signUp = (email, password, name, confirm) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        confirm(true);
-      })
+      .then((user) =>{
+        const temp = {
+            name: name,
+        }
+        firebase.database().ref("users/"+user.user.uid).set(temp);
+         confirm(true);
+
+    }
+            
+       
+      )
       .catch(error => {
         if (password.length < 6) {
           alert("Password length too short, try again");
@@ -122,18 +140,22 @@ class Fire {
     return firebase.database().ref("groups");
   }
   //returns a snapshot of the message that was just sent
-  parse = snapshot => {
+  parse = (snapshot,gid) => {
     const { timestamp: numberStamp, text, user, _id } = snapshot.val();
 
 
     const timestamp = new Date(numberStamp);
-    const message = {
+    let message = {
       _id,
       timestamp,
       text,
       user
     };
-
+    
+      let bytes = CryptoJS.AES.decrypt(message.text, gid);
+      let originalText = bytes.toString(CryptoJS.enc.Utf8);
+      message.text = originalText;
+       
     return message;
   };
 
@@ -143,7 +165,7 @@ class Fire {
       .child("/" + gid + "/messages")
       // .limitToLast(20) //commented out for now but will want to limit # of messages later on
       .on("child_added", snapshot => {
-        callback(this.parse(snapshot));
+        callback(this.parse(snapshot, gid));
       });
   };
 
@@ -155,7 +177,10 @@ class Fire {
   // send the message to the Backend
   send = (messages, gid, gName) => {
     for (let i = 0; i < messages.length; i++) {
-      const { text, user } = messages[i];
+      let { text, user } = messages[i];
+   
+        text = CryptoJS.AES.encrypt(text, gid).toString();
+ 
       const message = {
         _id: Date.now(),
         text,

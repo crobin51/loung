@@ -14,15 +14,17 @@ export default class SignUp extends React.Component {
     title: "loung"
   };
 
-  state = { email: "", password: "", errorMessage: null };
+  state = { email: "", password: "", name: "", errorMessage: null };
 
 //signs the user up with the database
   handleSignUp = () => {
     Fire.shared.signUp(
       this.state.email.trim(),
       this.state.password.trim(),
+     this.state.name,
       signedIn => {
         if (signedIn) {
+            
           this.props.navigation.navigate("GroupChat");
         }
       }
@@ -38,6 +40,15 @@ export default class SignUp extends React.Component {
           )}
         </View>
         <View style={styles.input}>
+             <TextInput
+             placeholder="display name"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
+            autoCapitalize="none"
+            style={styles.textInput}
+            onChangeText={name => this.setState({ name })}
+            value={this.state.name}
+          />
+            
           <TextInput
             placeholder="email"
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
@@ -55,6 +66,8 @@ export default class SignUp extends React.Component {
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
+          
+                
         </View>
         <View style={styles.buttons}>
           <TouchableOpacity style={styles.physcialButton} onPress={this.handleSignUp}><Text style={styles.buttonText}>sign up</Text></TouchableOpacity>
