@@ -104,7 +104,12 @@ class Chat extends React.Component {
               groupName: gInfo
             });
           }
-        );
+        ).then(()=>{
+            Fire.shared.getUsers(this.props.navigation.state.params.code, users=>{
+                console.log(users);
+            })
+            
+        });
       }
     });
 

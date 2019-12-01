@@ -66,6 +66,25 @@ joinGroup = (code, callback) => {
 
   };
 
+getUsers = (gid, callback) => {
+    let users =[];
+    firebase.database().ref("users").once("value", snapshot => {
+        snapshot.foreach(child =>{
+            for (var i = 0; i < child.val().groups.length; i++) {
+             if (child.val().groups[i] === gid) {
+            
+            groups.push(child.val().name);
+
+            break;
+          }
+        }})
+          
+        callback(users);
+
+    })
+    
+}
+
   //makes sure that the authentication status to change
   observeAuth = () =>
     firebase.auth().onAuthStateChanged(this.onAuthStateChanged);

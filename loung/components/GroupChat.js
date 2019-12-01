@@ -53,6 +53,8 @@ class GroupChat extends React.Component {
     if (this.state.groupName === "") {
       alert("Group Name cannot be empty, please enter a valid name.");
     } else {
+        Fire.shared.joinGroup(this.state.groupCode, confirm => {
+            if(confirm){
       this.props.navigation.navigate("Chat", {
         name: this.state.name,
         groupName: this.state.groupName,
@@ -60,7 +62,9 @@ class GroupChat extends React.Component {
         flag: 1
       });
       this.setState({ renderState: 0 });
-    }
+     }
+            
+        })}
   };
 
 //finds an existing chatroom
