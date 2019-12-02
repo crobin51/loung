@@ -53,13 +53,14 @@ class GroupChat extends React.Component {
     if (this.state.groupName === "") {
       alert("Group Name cannot be empty, please enter a valid name.");
     } else {
-        Fire.shared.joinGroup(this.state.groupCode, confirm => {
+        Fire.shared.joinGroup(result, confirm => {
             if(confirm){
       this.props.navigation.navigate("Chat", {
         name: this.state.name,
         groupName: this.state.groupName,
         code: result,
-        flag: 1
+        flag: 1,
+        users: []
       });
       this.setState({ renderState: 0 });
      }
@@ -83,7 +84,8 @@ class GroupChat extends React.Component {
         groupName: "",
         name: this.state.name,
         code: this.state.groupCode.toUpperCase(),
-        flag: 0
+        flag: 0,
+        users: []
       }); 
             }
             
@@ -95,7 +97,7 @@ class GroupChat extends React.Component {
 
   componentDidMount() {
     Fire.shared.userInfo(info => {
-        console.log(info);
+       // console.log(info);
         
       this.setState({
         name: info.user,
@@ -133,7 +135,6 @@ usersChats = () => {
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupName}
-            autoCapitalize="characters"
             value={this.state.groupName}
             placeholder="be creative"
             placeholderTextColor="rgba(255, 255, 255, 0.3)"

@@ -33,15 +33,18 @@ joinGroup = (code, callback) => {
             for(var i = 0; i < snapshot.val().groups.length; i++){
                 previousGroups.push(snapshot.val().groups[i]);
             }
-              console.log(previousGroups);
+              
           }
-           previousGroups.push(code);
+          if(!previousGroups.includes(code)){
+              previousGroups.push(code);
+          }
+           
           
             const temp = {
             name: snapshot.val().name,
             groups: previousGroups
         }
-            //console.log(temp);
+            
         firebase.database().ref("users/"+user.uid).set(temp);
           
           callback(true);
@@ -69,11 +72,15 @@ joinGroup = (code, callback) => {
 getUsers = (gid, callback) => {
     let users =[];
     firebase.database().ref("users").once("value", snapshot => {
-        snapshot.foreach(child =>{
+        snapshot.forEach(child =>{
+           
+            
+      
             for (var i = 0; i < child.val().groups.length; i++) {
+              
              if (child.val().groups[i] === gid) {
             
-            groups.push(child.val().name);
+            users.push(child.val().name);
 
             break;
           }
@@ -241,12 +248,15 @@ getUsers = (gid, callback) => {
 
   //sets a group initially in the db
   appendGroup = (code, name) => {
+      
+      let text =  CryptoJS.AES.encrypt("Welcome", code).toString();
+        
     const group = {
       groupName: name,
       messages: [
         {
           _id: 1234,
-          text: "Welcome",
+          text: text,
           timestamp: Date.now(),
           user: {
             _id: this.uid,
