@@ -8,10 +8,16 @@ import {
 } from "react-native";
 import Fire from "../Fire"; //^7.2.1
 import styles from './styles';
+import { Icon } from "react-native-elements";
 
 export default class SignUp extends React.Component {
   static navigationOptions = {
-    title: "loung"
+    title: "loung",
+    headerRight: () => (
+      <Icon
+        containerStyle={{ marginRight: 10 }}
+      />
+    ) 
   };
 
   state = { email: "", password: "", name: "", errorMessage: null };

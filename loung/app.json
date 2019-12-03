@@ -13,9 +13,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#010A26"
+    },
+    "android": {
+      "package": "com.theRedCircles.loung"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +27,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.theRedCircles.loung"
+    },
+    "description": "Test"
   }
 }
