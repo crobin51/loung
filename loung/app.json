@@ -13,9 +13,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#010A26"
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "package": "com.theRedCircles.loung"
@@ -30,6 +30,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.theRedCircles.loung"
     },
-    "description": "Test"
+    "description": "Encrypted Chat app developed by Cryston, Alec, Ross and JJ "
   }
 }
