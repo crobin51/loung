@@ -19,7 +19,8 @@ class GroupChat extends React.Component {
     chats: [],
     groupName: "",
     renderState: 0,
-    groupCode: ""
+    groupCode: "",
+    key: ""
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -28,12 +29,14 @@ class GroupChat extends React.Component {
       <Icon
         containerStyle={{ marginRight: 10 }}
       />
-    ) 
+    )
   });
 
   onChangeGroupName = groupName => this.setState({ groupName });
 
   onChangeGroupCode = groupCode => this.setState({ groupCode });
+
+  onChangeKey = key => this.setState({ key });
 
   //changes the render to the newChat render
   newChat = () => this.setState({ renderState: 1 });
@@ -57,7 +60,8 @@ class GroupChat extends React.Component {
         name: this.state.name,
         groupName: this.state.groupName,
         code: result,
-        flag: 1
+        flag: 1,
+        key: this.state.key
       });
       this.setState({ renderState: 0 });
     }
@@ -77,7 +81,8 @@ class GroupChat extends React.Component {
         groupName: "",
         name: this.state.name,
         code: this.state.groupCode.toUpperCase(),
-        flag: 0
+        flag: 0,
+        key: this.state.key
       });
     }
   };
@@ -117,6 +122,14 @@ class GroupChat extends React.Component {
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
           />
 
+          <TextInput
+            style={styles.nameInput}
+            onChangeText={this.onChangeKey}
+            value={this.state.key}
+            placeholder="encryption key"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
+          />
+
           <TouchableOpacity onPress={this.createNewChatroom}>
             <Text style={styles.buttons}>create</Text>
           </TouchableOpacity>
@@ -140,6 +153,15 @@ class GroupChat extends React.Component {
             placeholder="5 digits..."
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
           />
+
+          <TextInput
+            style={styles.nameInput}
+            onChangeText={this.onChangeKey}
+            value={this.state.key}
+            placeholder="encryption key"
+            placeholderTextColor="rgba(255, 255, 255, 0.3)"
+          />
+
           <TouchableOpacity onPress={this.findExistingChatroom}>
             <Text style={styles.buttons}>join</Text>
           </TouchableOpacity>
@@ -204,7 +226,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingTop: '1%',
   },
-  
+
 });
 
 export default GroupChat;

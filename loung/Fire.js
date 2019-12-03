@@ -154,8 +154,9 @@ class Fire {
 
   // send the message to the Backend
   send = (messages, gid, gName) => {
-    for (let i = 0; i < messages.length; i++) {
+      for (let i = 0; i < messages.length; i++) {
       const { text, user } = messages[i];
+      //const ciphertext = "test";
       const message = {
         _id: Date.now(),
         text,

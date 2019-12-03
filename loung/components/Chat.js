@@ -8,6 +8,11 @@ import Fire from "../Fire"; //^7.2.1
 import KeyboardSpacer from "react-native-keyboard-spacer"; //^0.4.1
 //KeyboardSpacer allows the text input field to remain on top of the keyboard
 
+//Encrytion library imports
+var CryptoJS = require("crypto-js");
+var AES = require("crypto-js/aes");
+var SHA256 = require("crypto-js/sha256");
+
 //this function ignores the "set a timer warning" on the bottom of the app.
 //Currently there is no solutions, only work arounds as of October 25th, 2019
 //https://stackoverflow.com/questions/44603362/setting-a-timer-for-a-long-period-of-time-i-e-multiple-minutes
@@ -40,7 +45,8 @@ class Chat extends React.Component {
   state = {
     //holds the messages in the chat state
     messages: [],
-    flag: this.props.navigation.state.params.flag
+    flag: this.props.navigation.state.params.flag,
+    theKey: this.props.navigation.state.params.key //"secret key 123"
   };
 
   get user() {
@@ -52,6 +58,9 @@ class Chat extends React.Component {
   }
 
   onSend = (messages = []) => {
+    //encrypts the message text, places it in a variable and then replaces the message's text with ciphertext
+    const encryptedText = CryptoJS.AES.encrypt(messages[0].text, this.state.theKey);
+    messages[0].text = encryptedText.toString();
     Fire.shared.send(
       messages,
       this.props.navigation.state.params.code,
@@ -70,9 +79,9 @@ class Chat extends React.Component {
           placeholder="type away..."
           placeholderTextColor="rgba(255, 255, 255, 1.0)"
           renderInputToolbar={props => ( <InputToolbar {...props} containerStyle={{ backgroundColor: '#010A26', }} renderComposer={props1 => ( <Composer {...props1} textInputStyle={{ color: "white"}} /> )} /> )}
-        /> 
+        />
         <KeyboardSpacer />
-      </View> 
+      </View>
     );
   }
 
@@ -109,11 +118,19 @@ class Chat extends React.Component {
     });
 
       //makes sure that Firebase loads the previous messages on chat component rendering
-    Fire.shared.on(this.props.navigation.state.params.code.trim(), message =>
+    Fire.shared.on(this.props.navigation.state.params.code.trim(), message =>{
+      //try's to decrypts incoming messages with the given key and replace the message's text with cleartext. 
+      try {
+        console.log(this.props.navigation.state.params);
+      const decryptedText = CryptoJS.AES.decrypt(message.text, this.state.theKey);
+      message.text = decryptedText.toString(CryptoJS.enc.Utf8);
+    } catch (e) {
+      console.log(this.state.theKey);
+    }
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, message)
       }))
-    );
+    });
   }
 
   //when the chat app is turned off, the firebase connection will be shut off
@@ -126,7 +143,7 @@ export default Chat;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,  
+    flex: 1,
     backgroundColor: '#010A26',
-  },  
+  },
 })
