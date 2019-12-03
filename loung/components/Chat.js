@@ -33,7 +33,7 @@ class Chat extends React.Component {
     title: navigation.getParam("groupName"),
     headerRight: () => (
       <Icon
-        onPress={() => alert("Group Code: " + navigation.getParam("code"))}
+        onPress={() => alert("Group Code: " + navigation.getParam("code") + "\n\nPassword: " + navigation.getParam("key"))}
         name="unlock"
         type="font-awesome"
         containerStyle={{ marginRight: 15,}}
@@ -119,9 +119,8 @@ class Chat extends React.Component {
 
       //makes sure that Firebase loads the previous messages on chat component rendering
     Fire.shared.on(this.props.navigation.state.params.code.trim(), message =>{
-      //try's to decrypts incoming messages with the given key and replace the message's text with cleartext. 
+      //try's to decrypts incoming messages with the given key and replace the message's text with cleartext.
       try {
-        console.log(this.props.navigation.state.params);
       const decryptedText = CryptoJS.AES.decrypt(message.text, this.state.theKey);
       message.text = decryptedText.toString(CryptoJS.enc.Utf8);
     } catch (e) {
