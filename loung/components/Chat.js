@@ -33,7 +33,7 @@ class Chat extends React.Component {
     title: navigation.getParam("groupName"),
     headerRight: () => (
       <Icon
-        onPress={() => alert("Group Code: " + navigation.getParam("code") + "\n\nPassword: " + navigation.getParam("key"))}
+        onPress={() => alert("Group Code: " + navigation.getParam("code") + "\r\n Users: " + navigation.getParam("users").toString() + "\n\nPassword: " + navigation.getParam("key"))}
         name="unlock"
         type="font-awesome"
         containerStyle={{ marginRight: 15,}}
@@ -112,8 +112,15 @@ class Chat extends React.Component {
             this.props.navigation.setParams({
               groupName: gInfo
             });
+
+              Fire.shared.getUsers(this.props.navigation.state.params.code, users=>{
+                //console.log(users);
+                this.props.navigation.setParams({
+              users: users
+            });
+            })
           }
-        );
+        )
       }
     });
 

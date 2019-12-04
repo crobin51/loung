@@ -81,6 +81,28 @@ getUsers = (gid, callback) => {
 
             users.push(child.val().name);
 
+          }
+        }})
+
+        callback(users);
+
+    })
+
+}
+
+getUsers = (gid, callback) => {
+    let users =[];
+    firebase.database().ref("users").once("value", snapshot => {
+        snapshot.forEach(child =>{
+
+
+
+            for (var i = 0; i < child.val().groups.length; i++) {
+
+             if (child.val().groups[i] === gid) {
+
+            users.push(child.val().name);
+
             break;
           }
         }})
@@ -98,15 +120,11 @@ getUsers = (gid, callback) => {
   //check state of Autherized user
   onAuthStateChanged = user => {
     if (!user) {
-      try {
-        firebase.auth().signInAnonymously();
-      } catch ({ message }) {
-        alert(message);
-      }
+
     }
   };
 
-  signUp = (email, password, confirm) => {
+  signUp = (email, password, name, confirm) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -169,12 +187,12 @@ getUsers = (gid, callback) => {
     return firebase.database().ref("groups");
   }
   //returns a snapshot of the message that was just sent
-  parse = snapshot => {
+  parse = (snapshot,gid) => {
     const { timestamp: numberStamp, text, user, _id } = snapshot.val();
 
 
     const timestamp = new Date(numberStamp);
-    const message = {
+    let message = {
       _id,
       timestamp,
       text,
@@ -190,7 +208,7 @@ getUsers = (gid, callback) => {
       .child("/" + gid + "/messages")
       // .limitToLast(20) //commented out for now but will want to limit # of messages later on
       .on("child_added", snapshot => {
-        callback(this.parse(snapshot));
+        callback(this.parse(snapshot, gid));
       });
   };
 
@@ -244,6 +262,7 @@ getUsers = (gid, callback) => {
 
   //sets a group initially in the db
   appendGroup = (code, name) => {
+
     const group = {
       groupName: name,
       messages: [

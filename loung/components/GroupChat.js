@@ -15,7 +15,7 @@ class GroupChat extends React.Component {
     super(props);
   }
   state = {
-    name: null,
+    name: " ",
     chats: [],
     groupName: "",
     renderState: 0,
@@ -56,15 +56,20 @@ class GroupChat extends React.Component {
     if (this.state.groupName === "") {
       alert("Group Name cannot be empty, please enter a valid name.");
     } else {
+        Fire.shared.joinGroup(result, confirm => {
+            if(confirm){
       this.props.navigation.navigate("Chat", {
         name: this.state.name,
         groupName: this.state.groupName,
         code: result,
         flag: 1,
+        users: [],
         key: this.state.key
       });
       this.setState({ renderState: 0 });
-    }
+     }
+
+        })}
   };
 
 //finds an existing chatroom
@@ -77,24 +82,38 @@ class GroupChat extends React.Component {
     ) {
       alert("Invalid Group Code Length. Please enter your 5 characther code!");
     } else {
-      this.props.navigation.navigate("Chat", {
+        Fire.shared.joinGroup(this.state.groupCode, confirm => {
+            if(confirm){
+               this.props.navigation.navigate("Chat", {
         groupName: "",
         name: this.state.name,
         code: this.state.groupCode.toUpperCase(),
         flag: 0,
+        users: [],
         key: this.state.key
       });
+            }
+
+        })
+
+
     }
   };
 
   componentDidMount() {
     Fire.shared.userInfo(info => {
+       // console.log(info);
+
       this.setState({
         name: info.user,
         chats: info.groups
       });
     });
   }
+
+usersChats = () => {
+    alert(this.state.chats.toString());
+}
 
   render() {
     if (this.state.renderState === 0) {
@@ -107,6 +126,11 @@ class GroupChat extends React.Component {
           <TouchableOpacity onPress={this.newChat}>
             <Text style={styles.mainButtons}>Create New Chatroom</Text>
           </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.usersChats}>
+            <Text style={styles.mainButtons}>Your Group Codes</Text>
+          </TouchableOpacity>
+
         </View>
       );
     } else if (this.state.renderState === 1) {
@@ -116,7 +140,6 @@ class GroupChat extends React.Component {
           <TextInput
             style={styles.nameInput}
             onChangeText={this.onChangeGroupName}
-            autoCapitalize="characters"
             value={this.state.groupName}
             placeholder="be creative"
             placeholderTextColor="rgba(255, 255, 255, 0.3)"
