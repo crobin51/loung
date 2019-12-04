@@ -23,34 +23,73 @@ class Fire {
     }
   };
 
-  //get User Info/Groups they belong to
+joinGroup = (code, callback) => {
+      let user = firebase.auth().currentUser;
+
+      firebase.database().ref("users/" + user.uid).once("value", snapshot => {
+          let previousGroups = [];
+          if(snapshot.val().groups != null){
+            for(var i = 0; i < snapshot.val().groups.length; i++){
+                previousGroups.push(snapshot.val().groups[i]);
+            }
+
+          }
+          if(!previousGroups.includes(code)){
+              previousGroups.push(code);
+          }
+
+
+            const temp = {
+            name: snapshot.val().name,
+            groups: previousGroups
+        }
+
+        firebase.database().ref("users/"+user.uid).set(temp);
+
+          callback(true);
+      })
+}
+
   userInfo = callback => {
     let user = firebase.auth().currentUser;
 
-    let groups = [];
-    this.ref.once("value", snapshot => {
-      snapshot.forEach(child => {
-        for (var i = 0; i < child.val().messages.length; i++) {
-          if (child.val().messages[i].user._id === user.uid) {
-            const group = {
-              code: child.key,
-              name: child.val().groupName
-            };
-            groups.push(group);
+      firebase.database().ref("users/" + user.uid).once("value", snapshot =>{
 
-            break;
-          }
-        }
-      });
 
-      const info = {
-        user: user.email,
-        groups: groups
+             const info = {
+        user: snapshot.val().name,
+        groups:snapshot.val().groups
+
       };
 
       callback(info);
-    });
+      })
+
+
   };
+
+getUsers = (gid, callback) => {
+    let users =[];
+    firebase.database().ref("users").once("value", snapshot => {
+        snapshot.forEach(child =>{
+
+
+
+            for (var i = 0; i < child.val().groups.length; i++) {
+
+             if (child.val().groups[i] === gid) {
+
+            users.push(child.val().name);
+
+            break;
+          }
+        }})
+
+        callback(users);
+
+    })
+
+}
 
   //makes sure that the authentication status to change
   observeAuth = () =>
@@ -71,9 +110,17 @@ class Fire {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        confirm(true);
-      })
+      .then((user) =>{
+        const temp = {
+            name: name,
+        }
+        firebase.database().ref("users/"+user.user.uid).set(temp);
+         confirm(true);
+
+    }
+
+
+      )
       .catch(error => {
         if (password.length < 6) {
           alert("Password length too short, try again");
@@ -154,9 +201,8 @@ class Fire {
 
   // send the message to the Backend
   send = (messages, gid, gName) => {
-      for (let i = 0; i < messages.length; i++) {
-      const { text, user } = messages[i];
-      //const ciphertext = "test";
+    for (let i = 0; i < messages.length; i++) {
+      let { text, user } = messages[i];
       const message = {
         _id: Date.now(),
         text,
